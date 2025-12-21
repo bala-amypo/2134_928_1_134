@@ -1,49 +1,48 @@
-// File: DailySymptomLog.java
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import jakarta.persistence.*;
 
 @Entity
+@Table(
+    name = "daily_symptom_logs",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"patient_id", "logDate"})
+)
 public class DailySymptomLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "patient_id")
     private PatientProfile patient;
 
+    @NotNull
     private LocalDate logDate;
+
+    @Min(0) @Max(10)
     private Integer painLevel;
+
+    @Min(0) @Max(10)
     private Integer mobilityLevel;
+
+    @Min(0) @Max(10)
     private Integer fatigueLevel;
+
     private String notes;
     private LocalDateTime submittedAt;
 
     public DailySymptomLog() {}
-
-    public DailySymptomLog(Long id, PatientProfile patient,
-                           LocalDate logDate, Integer painLevel,
-                           Integer mobilityLevel, Integer fatigueLevel,
-                           String notes, LocalDateTime submittedAt) {
-        this.id = id;
-        this.patient = patient;
-        this.logDate = logDate;
-        this.painLevel = painLevel;
-        this.mobilityLevel = mobilityLevel;
-        this.fatigueLevel = fatigueLevel;
-        this.notes = notes;
-        this.submittedAt = submittedAt;
-    }
 
     @PrePersist
     public void onCreate() {
         this.submittedAt = LocalDateTime.now();
     }
 
-    // Getters & Setters
+    // Getters & setters
     public Long getId() { return id; }
 
     public PatientProfile getPatient() { return patient; }
@@ -56,14 +55,10 @@ public class DailySymptomLog {
     public void setPainLevel(Integer painLevel) { this.painLevel = painLevel; }
 
     public Integer getMobilityLevel() { return mobilityLevel; }
-    public void setMobilityLevel(Integer mobilityLevel) {
-        this.mobilityLevel = mobilityLevel;
-    }
+    public void setMobilityLevel(Integer mobilityLevel) { this.mobilityLevel = mobilityLevel; }
 
     public Integer getFatigueLevel() { return fatigueLevel; }
-    public void setFatigueLevel(Integer fatigueLevel) {
-        this.fatigueLevel = fatigueLevel;
-    }
+    public void setFatigueLevel(Integer fatigueLevel) { this.fatigueLevel = fatigueLevel; }
 
     public String getNotes() { return notes; }
     public void setNotes(String notes) { this.notes = notes; }

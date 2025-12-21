@@ -1,32 +1,29 @@
-// File: AppUser.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
+@Table(name = "app_users")
 public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Email
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @NotBlank
     private String password;
-    private String role;
+
+    @NotBlank
+    private String role; // ADMIN | DOCTOR | STAFF
 
     public AppUser() {}
 
-    public AppUser(Long id, String email,
-                   String password, String role) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
-
-    // Getters & Setters
+    // Getters & setters
     public Long getId() { return id; }
 
     public String getEmail() { return email; }

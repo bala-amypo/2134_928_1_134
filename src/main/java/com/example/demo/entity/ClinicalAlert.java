@@ -1,52 +1,47 @@
-// File: ClinicalAlert.java
 package com.example.demo.entity;
 
-import java.time.LocalDate;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "clinical_alerts")
 public class ClinicalAlert {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "patient_id")
     private PatientProfile patient;
 
+    @NotNull
     private LocalDate alertDate;
-    private String severity;
+
+    @NotBlank
+    private String severity; // LOW | MEDIUM | HIGH
+
+    @NotBlank
     private String message;
+
     private Boolean resolved;
 
     public ClinicalAlert() {}
-
-    public ClinicalAlert(Long id, PatientProfile patient,
-                         LocalDate alertDate, String severity,
-                         String message, Boolean resolved) {
-        this.id = id;
-        this.patient = patient;
-        this.alertDate = alertDate;
-        this.severity = severity;
-        this.message = message;
-        this.resolved = resolved;
-    }
 
     @PrePersist
     public void onCreate() {
         this.resolved = false;
     }
 
-    // Getters & Setters
+    // Getters & setters
     public Long getId() { return id; }
 
     public PatientProfile getPatient() { return patient; }
     public void setPatient(PatientProfile patient) { this.patient = patient; }
 
     public LocalDate getAlertDate() { return alertDate; }
-    public void setAlertDate(LocalDate alertDate) {
-        this.alertDate = alertDate;
-    }
+    public void setAlertDate(LocalDate alertDate) { this.alertDate = alertDate; }
 
     public String getSeverity() { return severity; }
     public void setSeverity(String severity) { this.severity = severity; }

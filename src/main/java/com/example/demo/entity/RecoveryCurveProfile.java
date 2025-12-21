@@ -1,36 +1,38 @@
-// File: RecoveryCurveProfile.java
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
+@Table(
+    name = "recovery_curve_profiles",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"surgeryType", "dayNumber"})
+)
 public class RecoveryCurveProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String surgeryType;
+
+    @NotNull
+    @Min(0)
     private Integer dayNumber;
+
+    @Min(0) @Max(10)
     private Integer expectedPainLevel;
+
+    @Min(0) @Max(10)
     private Integer expectedMobilityLevel;
+
+    @Min(0) @Max(10)
     private Integer expectedFatigueLevel;
 
     public RecoveryCurveProfile() {}
 
-    public RecoveryCurveProfile(Long id, String surgeryType, Integer dayNumber,
-                                Integer expectedPainLevel,
-                                Integer expectedMobilityLevel,
-                                Integer expectedFatigueLevel) {
-        this.id = id;
-        this.surgeryType = surgeryType;
-        this.dayNumber = dayNumber;
-        this.expectedPainLevel = expectedPainLevel;
-        this.expectedMobilityLevel = expectedMobilityLevel;
-        this.expectedFatigueLevel = expectedFatigueLevel;
-    }
-
-    // Getters & Setters
+    // Getters & setters
     public Long getId() { return id; }
 
     public String getSurgeryType() { return surgeryType; }

@@ -1,44 +1,54 @@
-// File: PatientProfile.java
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "patient_profiles")
 public class PatientProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @NotBlank
+    @Column(unique = true, nullable = false)
     private String patientId;
 
+    @NotBlank
     private String fullName;
+
+    @Min(0)
+    @Max(120)
     private Integer age;
 
+    @Email
     @Column(unique = true)
     private String email;
 
+    @NotBlank
     private String surgeryType;
+
     private Boolean active;
     private LocalDateTime createdAt;
 
-    public PatientProfile() {}
+    @OneToMany(
+        mappedBy = "patient",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<DailySymptomLog> symptomLogs;
 
-    public PatientProfile(Long id, String patientId, String fullName,
-                          Integer age, String email,
-                          String surgeryType, Boolean active,
-                          LocalDateTime createdAt) {
-        this.id = id;
-        this.patientId = patientId;
-        this.fullName = fullName;
-        this.age = age;
-        this.email = email;
-        this.surgeryType = surgeryType;
-        this.active = active;
-        this.createdAt = createdAt;
-    }
+    @OneToMany(
+        mappedBy = "patient",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<ClinicalAlert> alerts;
+
+    public PatientProfile() {}
 
     @PrePersist
     public void onCreate() {
@@ -46,7 +56,7 @@ public class PatientProfile {
         this.active = true;
     }
 
-    // Getters & Setters
+    // Getters & setters
     public Long getId() { return id; }
 
     public String getPatientId() { return patientId; }
