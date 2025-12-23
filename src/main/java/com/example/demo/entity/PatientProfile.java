@@ -2,8 +2,11 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "patient_profiles")
@@ -13,69 +16,116 @@ public class PatientProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "Patient ID is required")
     @Column(unique = true, nullable = false)
     private String patientId;
 
-    @NotBlank
+    @NotBlank(message = "Full name is required")
     private String fullName;
 
-    @Min(0)
-    @Max(120)
+    @Min(value = 0, message = "Age cannot be negative")
+    @Max(value = 120, message = "Age cannot be greater than 120")
     private Integer age;
 
-    @Email
+    @Email(message = "Email must be valid")
     @Column(unique = true)
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Surgery type is required")
     private String surgeryType;
 
     private Boolean active;
+
     private LocalDateTime createdAt;
 
+    /* ---------------- RELATIONSHIPS ---------------- */
+
     @OneToMany(
-        mappedBy = "patient",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
+            mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
+    @JsonIgnore
     private List<DailySymptomLog> symptomLogs;
 
     @OneToMany(
-        mappedBy = "patient",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
+            mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
     )
+    @JsonIgnore
     private List<ClinicalAlert> alerts;
 
-    public PatientProfile() {}
+    /* ---------------- CONSTRUCTORS ---------------- */
+
+    public PatientProfile() {
+    }
+
+    /* ---------------- LIFECYCLE ---------------- */
 
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.active = true;
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
-    // Getters & setters
-    public Long getId() { return id; }
+    /* ---------------- GETTERS & SETTERS ---------------- */
 
-    public String getPatientId() { return patientId; }
-    public void setPatientId(String patientId) { this.patientId = patientId; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFullName() { return fullName; }
-    public void setFullName(String fullName) { this.fullName = fullName; }
+    public String getPatientId() {
+        return patientId;
+    }
 
-    public Integer getAge() { return age; }
-    public void setAge(Integer age) { this.age = age; }
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getFullName() {
+        return fullName;
+    }
 
-    public String getSurgeryType() { return surgeryType; }
-    public void setSurgeryType(String surgeryType) { this.surgeryType = surgeryType; }
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public Integer getAge() {
+        return age;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSurgeryType() {
+        return surgeryType;
+    }
+
+    public void setSurgeryType(String surgeryType) {
+        this.surgeryType = surgeryType;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
