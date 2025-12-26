@@ -1,13 +1,7 @@
 package com.example.demo.model;
 
-import lombok.*;
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class PatientProfile {
 
     private Long id;
@@ -18,4 +12,70 @@ public class PatientProfile {
     private String surgeryType;
     private Boolean active = true;
     private LocalDateTime createdAt;
+
+    public PatientProfile() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSurgeryType() {
+        return surgeryType;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setSurgeryType(String surgeryType) {
+        this.surgeryType = surgeryType;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 }

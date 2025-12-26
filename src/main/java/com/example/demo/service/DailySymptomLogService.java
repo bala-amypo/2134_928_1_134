@@ -1,12 +1,11 @@
-// File: DailySymptomLogService.java
 package com.example.demo.service;
 
+import com.example.demo.model.DailySymptomLog;
 import java.util.List;
-import com.example.demo.entity.DailySymptomLog;
 
 public interface DailySymptomLogService {
 
-    DailySymptomLog submitLog(DailySymptomLog log);
-
-    List<DailySymptomLog> getLogsForPatient(Long patientId);
+    DailySymptomLog recordSymptomLog(DailySymptomLog log);
+    DailySymptomLog updateSymptomLog(Long id, DailySymptomLog log);
+    List<DailySymptomLog> getLogsByPatient(Long patientId);
 }
