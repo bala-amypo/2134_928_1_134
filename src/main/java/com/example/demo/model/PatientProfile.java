@@ -4,139 +4,65 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(
+        name = "patient_profiles",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "patientId"),
+                @UniqueConstraint(columnNames = "email")
+        }
+)
 public class PatientProfile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String patientId;
+
+    @Column(nullable = false)
     private String fullName;
+
+    @Column(nullable = false)
     private Integer age;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String surgeryType;
+
+    @Column(nullable = false)
     private Boolean active = true;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    public PatientProfile() {
-    }
+    // ---------- Constructors ----------
+    public PatientProfile() {}
 
-    // ===== BUILDER =====
-    public static Builder builder() {
-        return new Builder();
-    }
+    // ---------- Getters & Setters ----------
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public static class Builder {
-        private final PatientProfile p = new PatientProfile();
+    public String getPatientId() { return patientId; }
+    public void setPatientId(String patientId) { this.patientId = patientId; }
 
-        public Builder id(Long id) {
-            p.setId(id);
-            return this;
-        }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-        public Builder patientId(String patientId) {
-            p.setPatientId(patientId);
-            return this;
-        }
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
 
-        public Builder fullName(String fullName) {
-            p.setFullName(fullName);
-            return this;
-        }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-        public Builder age(Integer age) {
-            p.setAge(age);
-            return this;
-        }
+    public String getSurgeryType() { return surgeryType; }
+    public void setSurgeryType(String surgeryType) { this.surgeryType = surgeryType; }
 
-        public Builder email(String email) {
-            p.setEmail(email);
-            return this;
-        }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 
-        public Builder surgeryType(String surgeryType) {
-            p.setSurgeryType(surgeryType);
-            return this;
-        }
-
-        public Builder active(Boolean active) {
-            p.setActive(active);
-            return this;
-        }
-
-        public Builder createdAt(LocalDateTime createdAt) {
-            p.setCreatedAt(createdAt);
-            return this;
-        }
-
-        public PatientProfile build() {
-            return p;
-        }
-    }
-
-    // ===== GETTERS =====
-    public Long getId() {
-        return id;
-    }
-
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getSurgeryType() {
-        return surgeryType;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    // ===== SETTERS =====
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setSurgeryType(String surgeryType) {
-        this.surgeryType = surgeryType;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
