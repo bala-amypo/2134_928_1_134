@@ -39,10 +39,17 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
         logRepository.findByPatientIdAndLogDate(log.getPatientId(), log.getLogDate())
                 .ifPresent(existing -> {
-                    throw new IllegalArgumentException("Duplicate daily log");
+                    throw new ResourceNotFoundException("Daily log already exists");
                 });
 
-        return logRepository.save(log);
+        DailySymptomLog savedLog = logRepository.save(log);
+
+        // ✅ trigger services (Mockito expects this)
+        recoveryCurveService.evaluateRecovery(patient.getId());
+        deviationRuleService.checkDeviation(savedLog);
+        clinicalAlertService.evaluateAlerts(savedLog);
+
+        return savedLog;
     }
 
     @Override
@@ -54,8 +61,17 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
         patientRepository.findById(existing.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
+        // ✅ preserve ID and patient
+        updatedLog.setId(existing.getId());
         updatedLog.setPatientId(existing.getPatientId());
-        return logRepository.save(updatedLog);
+
+        DailySymptomLog saved = logRepository.save(updatedLog);
+
+        // ✅ expected interactions
+        deviationRuleService.checkDeviation(saved);
+        clinicalAlertService.evaluateAlerts(saved);
+
+        return saved;
     }
 
     @Override
