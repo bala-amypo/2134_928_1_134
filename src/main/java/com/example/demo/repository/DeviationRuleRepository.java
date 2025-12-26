@@ -7,10 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviationRuleRepository extends JpaRepository<DeviationRule, Long> {
-
     Optional<DeviationRule> findByRuleCode(String ruleCode);
-
     List<DeviationRule> findByActiveTrue();
-
     List<DeviationRule> findBySurgeryType(String surgeryType);
 }
