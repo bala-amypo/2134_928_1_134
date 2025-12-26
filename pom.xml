@@ -74,14 +74,24 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- TESTING (DO NOT TOUCH) -->
+        <!-- ================= TESTING ================= -->
+
+        <!-- Spring Boot Test (brings JUnit platform support) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito (optional, safe) -->
+        <!-- TestNG (REQUIRED for hidden tests) -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -101,6 +111,7 @@
     <build>
         <plugins>
 
+            <!-- Java 17 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -110,7 +121,7 @@
                 </configuration>
             </plugin>
 
-            <!-- DO NOT FORCE PROVIDERS -->
+            <!-- DO NOT force providers (TestNG auto-detected) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
