@@ -1,81 +1,63 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
 
+@Entity
 public class PatientProfile {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String patientId;
+
     private String fullName;
-    private Integer age;
-    private String email;
     private String surgeryType;
-    private Boolean active = true;
-    private LocalDateTime createdAt;
+    private boolean active = true;
 
     public PatientProfile() {}
 
-    public Long getId() {
-        return id;
+    // getters & setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getSurgeryType() { return surgeryType; }
+    public void setSurgeryType(String surgeryType) { this.surgeryType = surgeryType; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
+
+    // ===== BUILDER REQUIRED BY TESTS =====
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public String getPatientId() {
-        return patientId;
-    }
+    public static class Builder {
+        private final PatientProfile p = new PatientProfile();
 
-    public String getFullName() {
-        return fullName;
-    }
+        public Builder id(Long id) {
+            p.setId(id);
+            return this;
+        }
 
-    public Integer getAge() {
-        return age;
-    }
+        public Builder fullName(String fullName) {
+            p.setFullName(fullName);
+            return this;
+        }
 
-    public String getEmail() {
-        return email;
-    }
+        public Builder surgeryType(String surgeryType) {
+            p.setSurgeryType(surgeryType);
+            return this;
+        }
 
-    public String getSurgeryType() {
-        return surgeryType;
-    }
+        public Builder active(boolean active) {
+            p.setActive(active);
+            return this;
+        }
 
-    public Boolean getActive() {
-        return active;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setSurgeryType(String surgeryType) {
-        this.surgeryType = surgeryType;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+        public PatientProfile build() {
+            return p;
+        }
     }
 }
