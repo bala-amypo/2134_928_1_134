@@ -1,61 +1,46 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class DeviationRule {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String ruleCode;
-    private String parameter;
+
+    private String metric;
     private Integer threshold;
-    private String severity;
-    private Boolean active = true;
 
     public DeviationRule() {}
 
-    public Long getId() {
-        return id;
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public String getRuleCode() {
-        return ruleCode;
+    public static class Builder {
+        private final DeviationRule d = new DeviationRule();
+
+        public Builder metric(String m) {
+            d.setMetric(m);
+            return this;
+        }
+
+        public Builder threshold(Integer t) {
+            d.setThreshold(t);
+            return this;
+        }
+
+        public DeviationRule build() {
+            return d;
+        }
     }
 
-    public String getParameter() {
-        return parameter;
-    }
+    public Long getId() { return id; }
+    public String getMetric() { return metric; }
+    public Integer getThreshold() { return threshold; }
 
-    public Integer getThreshold() {
-        return threshold;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setRuleCode(String ruleCode) {
-        this.ruleCode = ruleCode;
-    }
-
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
-    }
-
-    public void setThreshold(Integer threshold) {
-        this.threshold = threshold;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setMetric(String metric) { this.metric = metric; }
+    public void setThreshold(Integer threshold) { this.threshold = threshold; }
 }

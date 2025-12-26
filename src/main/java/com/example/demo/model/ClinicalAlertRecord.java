@@ -1,70 +1,47 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
 public class ClinicalAlertRecord {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long patientId;
-    private Long logId;
-    private String alertType;
-    private String severity;
+
     private String message;
-    private Boolean resolved = false;
+    private LocalDateTime triggeredAt;
 
     public ClinicalAlertRecord() {}
 
-    public Long getId() {
-        return id;
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public Long getPatientId() {
-        return patientId;
+    public static class Builder {
+        private final ClinicalAlertRecord c = new ClinicalAlertRecord();
+
+        public Builder message(String m) {
+            c.setMessage(m);
+            return this;
+        }
+
+        public Builder triggeredAt(LocalDateTime t) {
+            c.setTriggeredAt(t);
+            return this;
+        }
+
+        public ClinicalAlertRecord build() {
+            return c;
+        }
     }
 
-    public Long getLogId() {
-        return logId;
-    }
+    public Long getId() { return id; }
+    public String getMessage() { return message; }
+    public LocalDateTime getTriggeredAt() { return triggeredAt; }
 
-    public String getAlertType() {
-        return alertType;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public Boolean getResolved() {
-        return resolved;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setPatientId(Long patientId) {
-        this.patientId = patientId;
-    }
-
-    public void setLogId(Long logId) {
-        this.logId = logId;
-    }
-
-    public void setAlertType(String alertType) {
-        this.alertType = alertType;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setResolved(Boolean resolved) {
-        this.resolved = resolved;
-    }
+    public void setId(Long id) { this.id = id; }
+    public void setMessage(String message) { this.message = message; }
+    public void setTriggeredAt(LocalDateTime triggeredAt) { this.triggeredAt = triggeredAt; }
 }
