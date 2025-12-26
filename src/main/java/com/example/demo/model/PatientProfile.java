@@ -17,31 +17,89 @@ public class PatientProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
     private String patientId;
-
-    @Column(nullable = false)
     private String fullName;
-
-    @Column(nullable = false)
     private Integer age;
-
-    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
     private String surgeryType;
-
-    @Column(nullable = false)
     private Boolean active = true;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // ---------- Constructors ----------
+    // ---------- CONSTRUCTORS ----------
     public PatientProfile() {}
 
-    // ---------- Getters & Setters ----------
+    private PatientProfile(Builder builder) {
+        this.id = builder.id;
+        this.patientId = builder.patientId;
+        this.fullName = builder.fullName;
+        this.age = builder.age;
+        this.email = builder.email;
+        this.surgeryType = builder.surgeryType;
+        this.active = builder.active;
+        this.createdAt = builder.createdAt;
+    }
+
+    // ---------- BUILDER ----------
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String patientId;
+        private String fullName;
+        private Integer age;
+        private String email;
+        private String surgeryType;
+        private Boolean active = true;
+        private LocalDateTime createdAt;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder patientId(String patientId) {
+            this.patientId = patientId;
+            return this;
+        }
+
+        public Builder fullName(String fullName) {
+            this.fullName = fullName;
+            return this;
+        }
+
+        public Builder age(Integer age) {
+            this.age = age;
+            return this;
+        }
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder surgeryType(String surgeryType) {
+            this.surgeryType = surgeryType;
+            return this;
+        }
+
+        public Builder active(Boolean active) {
+            this.active = active;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public PatientProfile build() {
+            return new PatientProfile(this);
+        }
+    }
+
+    // ---------- GETTERS & SETTERS ----------
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

@@ -1,9 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "clinical_alerts")
 public class ClinicalAlertRecord {
 
     @Id
@@ -13,63 +13,42 @@ public class ClinicalAlertRecord {
     private Long patientId;
     private Long logId;
     private String alertType;
-    private String severity;          // ✅ REQUIRED
+    private String severity;
     private String message;
     private Boolean resolved = false;
-    private LocalDateTime triggeredAt;
 
     public ClinicalAlertRecord() {}
 
-    public static Builder builder() {
-        return new Builder();
+    private ClinicalAlertRecord(Builder b) {
+        this.id = b.id;
+        this.patientId = b.patientId;
+        this.logId = b.logId;
+        this.alertType = b.alertType;
+        this.severity = b.severity;
+        this.message = b.message;
+        this.resolved = b.resolved;
     }
 
+    public static Builder builder() { return new Builder(); }
+
     public static class Builder {
-        private final ClinicalAlertRecord c = new ClinicalAlertRecord();
+        private Long id;
+        private Long patientId;
+        private Long logId;
+        private String alertType;
+        private String severity;
+        private String message;
+        private Boolean resolved = false;
 
-        public Builder id(Long id) {
-            c.setId(id);
-            return this;
-        }
+        public Builder id(Long id) { this.id = id; return this; }
+        public Builder patientId(Long p) { this.patientId = p; return this; }
+        public Builder logId(Long l) { this.logId = l; return this; }
+        public Builder alertType(String a) { this.alertType = a; return this; }
+        public Builder severity(String s) { this.severity = s; return this; }
+        public Builder message(String m) { this.message = m; return this; }
+        public Builder resolved(Boolean r) { this.resolved = r; return this; }
 
-        public Builder patientId(Long patientId) {
-            c.setPatientId(patientId);
-            return this;
-        }
-
-        public Builder logId(Long logId) {
-            c.setLogId(logId);
-            return this;
-        }
-
-        public Builder alertType(String alertType) {
-            c.setAlertType(alertType);
-            return this;
-        }
-
-        public Builder severity(String severity) {
-            c.setSeverity(severity);
-            return this;
-        }
-
-        public Builder message(String message) {
-            c.setMessage(message);
-            return this;
-        }
-
-        public Builder resolved(Boolean resolved) {
-            c.setResolved(resolved);
-            return this;
-        }
-
-        public Builder triggeredAt(LocalDateTime triggeredAt) {
-            c.setTriggeredAt(triggeredAt);
-            return this;
-        }
-
-        public ClinicalAlertRecord build() {
-            return c;
-        }
+        public ClinicalAlertRecord build() { return new ClinicalAlertRecord(this); }
     }
 
     public Long getId() { return id; }
@@ -79,14 +58,4 @@ public class ClinicalAlertRecord {
     public String getSeverity() { return severity; }
     public String getMessage() { return message; }
     public Boolean getResolved() { return resolved; }
-    public LocalDateTime getTriggeredAt() { return triggeredAt; }
-
-    public void setId(Long id) { this.id = id; }
-    public void setPatientId(Long patientId) { this.patientId = patientId; }
-    public void setLogId(Long logId) { this.logId = logId; }
-    public void setAlertType(String alertType) { this.alertType = alertType; }
-    public void setSeverity(String severity) { this.severity = severity; }
-    public void setMessage(String message) { this.message = message; }
-    public void setResolved(Boolean resolved) { this.resolved = resolved; }
-    public void setTriggeredAt(LocalDateTime triggeredAt) { this.triggeredAt = triggeredAt; }
 }
