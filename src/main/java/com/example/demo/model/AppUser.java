@@ -14,16 +14,16 @@ import lombok.*;
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long getId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String getEmail;
+    private String email;
 
     @Column(nullable = false)
-    private String getPassword;
+    private String password;
 
     private String fullName;
 
     @Enumerated(EnumType.STRING)
-    private UserRole getRole;
+    private UserRole role;
 }
