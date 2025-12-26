@@ -1,68 +1,45 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.model.AppUser;
-import com.example.demo.model.UserRole;
-import com.example.demo.repository.AppUserRepository;
+import com.example.demo.dto.*;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-@Service
 public class AuthServiceImpl implements AuthService {
 
-    private final AppUserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AppUserRepository repo;
+    private final PasswordEncoder encoder;
+    private final AuthenticationManager manager;
+    private final JwtTokenProvider jwt;
 
-    public AuthServiceImpl(AppUserRepository repository,
-                           PasswordEncoder passwordEncoder,
-                           AuthenticationManager authenticationManager,
-                           JwtTokenProvider jwtTokenProvider) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
+    public AuthServiceImpl(AppUserRepository r, PasswordEncoder e,
+                           AuthenticationManager m, JwtTokenProvider j) {
+        this.repo = r; this.encoder = e; this.manager = m; this.jwt = j;
     }
 
-    @Override
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest req) {
+        AppUser user = AppUser.builder()
+                .email(req.getEmail())
+                .password(encoder.encode(req.getPassword()))
+                .fullName(req.getFullName())
+                .role(UserRole.CLINICIAN)
+                .build();
 
-        AppUser user = new AppUser();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFullName(request.getFullName());
-        user.setRole(UserRole.CLINICIAN); // matches tests
-
-        AppUser saved = repository.save(user);
-
-        String token = jwtTokenProvider.generateToken(saved);
-
-        return new AuthResponse(saved.getEmail(), token);
+        AppUser saved = repo.save(user);
+        return new AuthResponse(saved.getEmail(), jwt.generateToken(saved));
     }
 
-    @Override
-    public AuthResponse login(AuthRequest request) {
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
+    public AuthResponse login(AuthRequest req) {
+        manager.authenticate(
+            new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
         );
 
-        AppUser user = repository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user"));
+        AppUser user = repo.findByEmail(req.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid"));
 
-        String token = jwtTokenProvider.generateToken(user);
-
-        return new AuthResponse(user.getEmail(), token);
+        return new AuthResponse(user.getEmail(), jwt.generateToken(user));
     }
 }
- 

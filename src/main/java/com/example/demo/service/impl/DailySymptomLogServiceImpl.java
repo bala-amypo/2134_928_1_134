@@ -1,60 +1,45 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
-import com.example.demo.service.*;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-@Service
 public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
     private final DailySymptomLogRepository logRepo;
     private final PatientProfileRepository patientRepo;
+    private final RecoveryCurveService rc;
+    private final DeviationRuleService dr;
+    private final ClinicalAlertService ca;
 
     public DailySymptomLogServiceImpl(
             DailySymptomLogRepository l,
             PatientProfileRepository p,
-            RecoveryCurveService r,
-            DeviationRuleService d,
-            ClinicalAlertService c) {
-
-        this.logRepo = l;
-        this.patientRepo = p;
+            RecoveryCurveService rc,
+            DeviationRuleService dr,
+            ClinicalAlertService ca) {
+        this.logRepo = l; this.patientRepo = p;
+        this.rc = rc; this.dr = dr; this.ca = ca;
     }
 
     public DailySymptomLog recordSymptomLog(DailySymptomLog log) {
-
         patientRepo.findById(log.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Patient missing"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
 
-        if (logRepo.findByPatientIdAndLogDate(log.getPatientId(), log.getLogDate()).isPresent()) {
-            throw new IllegalArgumentException("Duplicate log");
-        }
+        logRepo.findByPatientIdAndLogDate(log.getPatientId(), log.getLogDate())
+                .ifPresent(x -> { throw new IllegalArgumentException("Duplicate"); });
 
         return logRepo.save(log);
     }
 
     public DailySymptomLog updateSymptomLog(Long id, DailySymptomLog updated) {
-
         DailySymptomLog existing = logRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Log not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Log"));
 
-        patientRepo.findById(updated.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Patient missing"));
+        patientRepo.findById(existing.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
 
-        existing.setPainLevel(updated.getPainLevel());
-        existing.setMobilityLevel(updated.getMobilityLevel());
-        existing.setFatigueLevel(updated.getFatigueLevel());
-        existing.setPatientId(updated.getPatientId());
-
-        return logRepo.save(existing);
+        updated.setPatientId(existing.getPatientId());
+        return logRepo.save(updated);
     }
 
-    public List<DailySymptomLog> getLogsByPatient(Long pid) {
+    public java.util.List<DailySymptomLog> getLogsByPatient(Long pid) {
         patientRepo.findById(pid)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient missing"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
         return logRepo.findByPatientId(pid);
     }
 }
