@@ -35,20 +35,23 @@ public class AuthServiceImpl implements AuthService {
         appUserRepository.findByEmail(request.getEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("Email already exists");
         });
-        AppUser user = AppUser.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .fullName(request.getFullName())
-                .role(request.getRole())
-                .build();
+        AppUser user = new AppUser(
+        null,
+        request.getEmail(),
+        passwordEncoder.encode(request.getPassword()),
+        request.getFullName(),
+        request.getRole()
+);
+
         AppUser saved = appUserRepository.save(user);
         String token = jwtTokenProvider.generateToken(saved);
-        return AuthResponse.builder()
-                .token(token)
-                .email(saved.getEmail())
-                .role(saved.getRole())
-                .userId(saved.getId())
-                .build();
+        return new AuthResponse(
+        token,
+        saved.getEmail(),
+        saved.getRole(),
+        saved.getId()
+);
+
     }
 
     @Override

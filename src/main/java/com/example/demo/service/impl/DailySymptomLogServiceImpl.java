@@ -60,13 +60,16 @@ public class DailySymptomLogServiceImpl implements DailySymptomLogService {
                         int delta = log.getPainLevel() - c.getExpectedPainLevel();
                         // any positive delta triggers an alert conceptually
                         if (delta > 0) {
-                            ClinicalAlertRecord alert = ClinicalAlertRecord.builder()
-                                    .patientId(log.getPatientId())
-                                    .logId(saved.getId())
-                                    .alertType("PAIN_HIGH")
-                                    .severity("MEDIUM")
-                                    .message("Pain spike detected")
-                                    .build();
+                            ClinicalAlertRecord alert = new ClinicalAlertRecord(
+        null,
+        log.getPatientId(),
+        saved.getId(),
+        "PAIN_HIGH",
+        "MEDIUM",
+        "Pain spike detected",
+        false
+);
+
                             clinicalAlertService.createAlert(alert);
                         }
                     }
