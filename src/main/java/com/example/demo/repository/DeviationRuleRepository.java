@@ -1,14 +1,10 @@
-// File: DeviationRuleRepository.java
 package com.example.demo.repository;
 
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.DeviationRule;
-
-public interface DeviationRuleRepository
-        extends JpaRepository<DeviationRule, Long> {
-
+import com.example.demo.model.*;
+import java.util.*;
+public interface DeviationRuleRepository {
+    DeviationRule save(DeviationRule r);
+    Optional<DeviationRule> findById(Long id);
+    Optional<DeviationRule> findByRuleCode(String code);
     List<DeviationRule> findByActiveTrue();
-
-    List<DeviationRule> findBySurgeryType(String surgeryType);
 }

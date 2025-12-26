@@ -1,14 +1,8 @@
-// File: AppUserRepository.java
 package com.example.demo.repository;
 
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.demo.entity.AppUser;
-
-public interface AppUserRepository
-        extends JpaRepository<AppUser, Long> {
-
+import com.example.demo.model.*;
+import java.util.*;
+public interface AppUserRepository {
     Optional<AppUser> findByEmail(String email);
-
-    boolean existsByEmail(String email);
+    AppUser save(AppUser user);
 }
