@@ -22,18 +22,23 @@ public class RecoveryCurveProfile {
     public static class Builder {
         private final RecoveryCurveProfile r = new RecoveryCurveProfile();
 
-        public Builder surgeryType(String s) {
-            r.setSurgeryType(s);
+        public Builder id(Long id) {
+            r.setId(id);
             return this;
         }
 
-        public Builder dayNumber(Integer d) {
-            r.setDayNumber(d);
+        public Builder surgeryType(String surgeryType) {
+            r.setSurgeryType(surgeryType);
             return this;
         }
 
-        public Builder expectedPainLevel(Integer p) {
-            r.setExpectedPainLevel(p);
+        public Builder dayNumber(Integer dayNumber) {
+            r.setDayNumber(dayNumber);
+            return this;
+        }
+
+        public Builder expectedPainLevel(Integer expectedPainLevel) {
+            r.setExpectedPainLevel(expectedPainLevel);
             return this;
         }
 

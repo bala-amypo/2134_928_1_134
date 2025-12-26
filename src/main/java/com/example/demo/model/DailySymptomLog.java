@@ -10,17 +10,15 @@ public class DailySymptomLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔥 MUST BE Long (not String)
     private Long patientId;
-
     private Integer painLevel;
     private Integer mobilityLevel;
     private Integer fatigueLevel;
+    private String additionalNotes;
     private LocalDate logDate;
 
     public DailySymptomLog() {}
 
-    // ===== BUILDER =====
     public static Builder builder() {
         return new Builder();
     }
@@ -28,28 +26,38 @@ public class DailySymptomLog {
     public static class Builder {
         private final DailySymptomLog d = new DailySymptomLog();
 
-        public Builder patientId(Long p) {
-            d.setPatientId(p);
+        public Builder id(Long id) {
+            d.setId(id);
             return this;
         }
 
-        public Builder painLevel(Integer p) {
-            d.setPainLevel(p);
+        public Builder patientId(Long patientId) {
+            d.setPatientId(patientId);
             return this;
         }
 
-        public Builder mobilityLevel(Integer m) {
-            d.setMobilityLevel(m);
+        public Builder painLevel(Integer painLevel) {
+            d.setPainLevel(painLevel);
             return this;
         }
 
-        public Builder fatigueLevel(Integer f) {
-            d.setFatigueLevel(f);
+        public Builder mobilityLevel(Integer mobilityLevel) {
+            d.setMobilityLevel(mobilityLevel);
             return this;
         }
 
-        public Builder logDate(LocalDate l) {
-            d.setLogDate(l);
+        public Builder fatigueLevel(Integer fatigueLevel) {
+            d.setFatigueLevel(fatigueLevel);
+            return this;
+        }
+
+        public Builder additionalNotes(String notes) {
+            d.setAdditionalNotes(notes);
+            return this;
+        }
+
+        public Builder logDate(LocalDate logDate) {
+            d.setLogDate(logDate);
             return this;
         }
 
@@ -58,12 +66,12 @@ public class DailySymptomLog {
         }
     }
 
-    // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
     public Long getPatientId() { return patientId; }
     public Integer getPainLevel() { return painLevel; }
     public Integer getMobilityLevel() { return mobilityLevel; }
     public Integer getFatigueLevel() { return fatigueLevel; }
+    public String getAdditionalNotes() { return additionalNotes; }
     public LocalDate getLogDate() { return logDate; }
 
     public void setId(Long id) { this.id = id; }
@@ -71,5 +79,6 @@ public class DailySymptomLog {
     public void setPainLevel(Integer painLevel) { this.painLevel = painLevel; }
     public void setMobilityLevel(Integer mobilityLevel) { this.mobilityLevel = mobilityLevel; }
     public void setFatigueLevel(Integer fatigueLevel) { this.fatigueLevel = fatigueLevel; }
+    public void setAdditionalNotes(String additionalNotes) { this.additionalNotes = additionalNotes; }
     public void setLogDate(LocalDate logDate) { this.logDate = logDate; }
 }

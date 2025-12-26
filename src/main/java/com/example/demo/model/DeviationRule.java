@@ -12,12 +12,11 @@ public class DeviationRule {
     private String ruleCode;
     private String parameter;
     private String severity;
-    private Integer threshold;   // 🔥 REQUIRED BY SERVICE
+    private Integer threshold;
     private Boolean active = true;
 
     public DeviationRule() {}
 
-    // ===== BUILDER =====
     public static Builder builder() {
         return new Builder();
     }
@@ -25,28 +24,33 @@ public class DeviationRule {
     public static class Builder {
         private final DeviationRule d = new DeviationRule();
 
-        public Builder ruleCode(String r) {
-            d.setRuleCode(r);
+        public Builder id(Long id) {
+            d.setId(id);
             return this;
         }
 
-        public Builder parameter(String p) {
-            d.setParameter(p);
+        public Builder ruleCode(String ruleCode) {
+            d.setRuleCode(ruleCode);
             return this;
         }
 
-        public Builder severity(String s) {
-            d.setSeverity(s);
+        public Builder parameter(String parameter) {
+            d.setParameter(parameter);
             return this;
         }
 
-        public Builder threshold(Integer t) {
-            d.setThreshold(t);
+        public Builder severity(String severity) {
+            d.setSeverity(severity);
             return this;
         }
 
-        public Builder active(Boolean a) {
-            d.setActive(a);
+        public Builder threshold(Integer threshold) {
+            d.setThreshold(threshold);
+            return this;
+        }
+
+        public Builder active(Boolean active) {
+            d.setActive(active);
             return this;
         }
 
@@ -55,7 +59,6 @@ public class DeviationRule {
         }
     }
 
-    // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
     public String getRuleCode() { return ruleCode; }
     public String getParameter() { return parameter; }
