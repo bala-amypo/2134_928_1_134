@@ -5,6 +5,7 @@ import com.example.demo.model.PatientProfile;
 import com.example.demo.repository.PatientProfileRepository;
 import com.example.demo.service.PatientProfileService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,29 +19,47 @@ public class PatientProfileServiceImpl implements PatientProfileService {
 
     @Override
     public PatientProfile createPatient(PatientProfile profile) {
+
+        if (profile == null) {
+            throw new IllegalArgumentException("Invalid patient profile");
+        }
+
         return repository.save(profile);
     }
 
     @Override
     public PatientProfile getPatientById(Long id) {
+
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
     }
 
     @Override
     public PatientProfile updatePatientStatus(Long id, boolean active) {
+
         PatientProfile patient = getPatientById(id);
+
         patient.setActive(active);
+
         return repository.save(patient);
     }
 
     @Override
     public Optional<PatientProfile> findByPatientId(String patientId) {
+
+        if (patientId == null) {
+            return Optional.empty();
+        }
+
         return repository.findByPatientId(patientId);
     }
 
     @Override
     public List<PatientProfile> getAllPatients() {
-        return repository.findAll();
+
+        List<PatientProfile> patients = repository.findAll();
+
+        // Mockito-safe: never return null
+        return patients != null ? patients : Collections.emptyList();
     }
 }
