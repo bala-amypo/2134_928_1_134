@@ -29,7 +29,9 @@ public class ClinicalAlertRecord {
         this.resolved = b.resolved;
     }
 
-    public static Builder builder() { return new Builder(); }
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static class Builder {
         private Long id;
@@ -41,16 +43,19 @@ public class ClinicalAlertRecord {
         private Boolean resolved = false;
 
         public Builder id(Long id) { this.id = id; return this; }
-        public Builder patientId(Long p) { this.patientId = p; return this; }
-        public Builder logId(Long l) { this.logId = l; return this; }
-        public Builder alertType(String a) { this.alertType = a; return this; }
-        public Builder severity(String s) { this.severity = s; return this; }
-        public Builder message(String m) { this.message = m; return this; }
-        public Builder resolved(Boolean r) { this.resolved = r; return this; }
+        public Builder patientId(Long patientId) { this.patientId = patientId; return this; }
+        public Builder logId(Long logId) { this.logId = logId; return this; }
+        public Builder alertType(String alertType) { this.alertType = alertType; return this; }
+        public Builder severity(String severity) { this.severity = severity; return this; }
+        public Builder message(String message) { this.message = message; return this; }
+        public Builder resolved(Boolean resolved) { this.resolved = resolved; return this; }
 
-        public ClinicalAlertRecord build() { return new ClinicalAlertRecord(this); }
+        public ClinicalAlertRecord build() {
+            return new ClinicalAlertRecord(this);
+        }
     }
 
+    // ✅ GETTERS
     public Long getId() { return id; }
     public Long getPatientId() { return patientId; }
     public Long getLogId() { return logId; }
@@ -58,4 +63,9 @@ public class ClinicalAlertRecord {
     public String getSeverity() { return severity; }
     public String getMessage() { return message; }
     public Boolean getResolved() { return resolved; }
+
+    // ✅ REQUIRED SETTER
+    public void setResolved(Boolean resolved) {
+        this.resolved = resolved;
+    }
 }
