@@ -12,7 +12,8 @@ public class ClinicalAlertRecord {
 
     private Long patientId;
     private Long logId;
-    private String alertType;          // ✅ REQUIRED
+    private String alertType;
+    private String severity;          // ✅ REQUIRED
     private String message;
     private Boolean resolved = false;
     private LocalDateTime triggeredAt;
@@ -46,6 +47,11 @@ public class ClinicalAlertRecord {
             return this;
         }
 
+        public Builder severity(String severity) {
+            c.setSeverity(severity);
+            return this;
+        }
+
         public Builder message(String message) {
             c.setMessage(message);
             return this;
@@ -70,6 +76,7 @@ public class ClinicalAlertRecord {
     public Long getPatientId() { return patientId; }
     public Long getLogId() { return logId; }
     public String getAlertType() { return alertType; }
+    public String getSeverity() { return severity; }
     public String getMessage() { return message; }
     public Boolean getResolved() { return resolved; }
     public LocalDateTime getTriggeredAt() { return triggeredAt; }
@@ -78,6 +85,7 @@ public class ClinicalAlertRecord {
     public void setPatientId(Long patientId) { this.patientId = patientId; }
     public void setLogId(Long logId) { this.logId = logId; }
     public void setAlertType(String alertType) { this.alertType = alertType; }
+    public void setSeverity(String severity) { this.severity = severity; }
     public void setMessage(String message) { this.message = message; }
     public void setResolved(Boolean resolved) { this.resolved = resolved; }
     public void setTriggeredAt(LocalDateTime triggeredAt) { this.triggeredAt = triggeredAt; }

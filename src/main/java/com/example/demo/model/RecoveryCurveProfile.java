@@ -12,7 +12,8 @@ public class RecoveryCurveProfile {
     private String surgeryType;
     private Integer dayNumber;
     private Integer expectedPainLevel;
-    private Integer expectedMobilityLevel; // ✅ REQUIRED
+    private Integer expectedMobilityLevel;
+    private Integer expectedFatigueLevel;   // ✅ REQUIRED
 
     public RecoveryCurveProfile() {}
 
@@ -48,6 +49,11 @@ public class RecoveryCurveProfile {
             return this;
         }
 
+        public Builder expectedFatigueLevel(Integer expectedFatigueLevel) {
+            r.setExpectedFatigueLevel(expectedFatigueLevel);
+            return this;
+        }
+
         public RecoveryCurveProfile build() {
             return r;
         }
@@ -58,12 +64,18 @@ public class RecoveryCurveProfile {
     public Integer getDayNumber() { return dayNumber; }
     public Integer getExpectedPainLevel() { return expectedPainLevel; }
     public Integer getExpectedMobilityLevel() { return expectedMobilityLevel; }
+    public Integer getExpectedFatigueLevel() { return expectedFatigueLevel; }
 
     public void setId(Long id) { this.id = id; }
     public void setSurgeryType(String surgeryType) { this.surgeryType = surgeryType; }
     public void setDayNumber(Integer dayNumber) { this.dayNumber = dayNumber; }
-    public void setExpectedPainLevel(Integer expectedPainLevel) { this.expectedPainLevel = expectedPainLevel; }
+    public void setExpectedPainLevel(Integer expectedPainLevel) {
+        this.expectedPainLevel = expectedPainLevel;
+    }
     public void setExpectedMobilityLevel(Integer expectedMobilityLevel) {
         this.expectedMobilityLevel = expectedMobilityLevel;
+    }
+    public void setExpectedFatigueLevel(Integer expectedFatigueLevel) {
+        this.expectedFatigueLevel = expectedFatigueLevel;
     }
 }
