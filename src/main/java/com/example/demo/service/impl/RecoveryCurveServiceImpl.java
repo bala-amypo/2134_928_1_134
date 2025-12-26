@@ -31,3 +31,4 @@ public class RecoveryCurveServiceImpl implements RecoveryCurveService {
         return repository.findAll();
     }
 }
+
