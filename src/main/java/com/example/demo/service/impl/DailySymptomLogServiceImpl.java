@@ -1,45 +1,69 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.DailySymptomLog;
+import com.example.demo.model.PatientProfile;
+import com.example.demo.repository.DailySymptomLogRepository;
+import com.example.demo.repository.PatientProfileRepository;
+import com.example.demo.service.*;
+
+import java.util.List;
+
 public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
-    private final DailySymptomLogRepository logRepo;
-    private final PatientProfileRepository patientRepo;
-    private final RecoveryCurveService rc;
-    private final DeviationRuleService dr;
-    private final ClinicalAlertService ca;
+    private final DailySymptomLogRepository logRepository;
+    private final PatientProfileRepository patientRepository;
+    private final RecoveryCurveService recoveryCurveService;
+    private final DeviationRuleService deviationRuleService;
+    private final ClinicalAlertService clinicalAlertService;
 
     public DailySymptomLogServiceImpl(
-            DailySymptomLogRepository l,
-            PatientProfileRepository p,
-            RecoveryCurveService rc,
-            DeviationRuleService dr,
-            ClinicalAlertService ca) {
-        this.logRepo = l; this.patientRepo = p;
-        this.rc = rc; this.dr = dr; this.ca = ca;
+            DailySymptomLogRepository logRepository,
+            PatientProfileRepository patientRepository,
+            RecoveryCurveService recoveryCurveService,
+            DeviationRuleService deviationRuleService,
+            ClinicalAlertService clinicalAlertService) {
+
+        this.logRepository = logRepository;
+        this.patientRepository = patientRepository;
+        this.recoveryCurveService = recoveryCurveService;
+        this.deviationRuleService = deviationRuleService;
+        this.clinicalAlertService = clinicalAlertService;
     }
 
+    @Override
     public DailySymptomLog recordSymptomLog(DailySymptomLog log) {
-        patientRepo.findById(log.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
 
-        logRepo.findByPatientIdAndLogDate(log.getPatientId(), log.getLogDate())
-                .ifPresent(x -> { throw new IllegalArgumentException("Duplicate"); });
+        PatientProfile patient = patientRepository.findById(log.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
-        return logRepo.save(log);
+        logRepository.findByPatientIdAndLogDate(log.getPatientId(), log.getLogDate())
+                .ifPresent(existing -> {
+                    throw new IllegalArgumentException("Duplicate daily log");
+                });
+
+        return logRepository.save(log);
     }
 
-    public DailySymptomLog updateSymptomLog(Long id, DailySymptomLog updated) {
-        DailySymptomLog existing = logRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Log"));
+    @Override
+    public DailySymptomLog updateSymptomLog(Long logId, DailySymptomLog updatedLog) {
 
-        patientRepo.findById(existing.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
+        DailySymptomLog existing = logRepository.findById(logId)
+                .orElseThrow(() -> new ResourceNotFoundException("Log not found"));
 
-        updated.setPatientId(existing.getPatientId());
-        return logRepo.save(updated);
+        patientRepository.findById(existing.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
+
+        updatedLog.setPatientId(existing.getPatientId());
+        return logRepository.save(updatedLog);
     }
 
-    public java.util.List<DailySymptomLog> getLogsByPatient(Long pid) {
-        patientRepo.findById(pid)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient"));
-        return logRepo.findByPatientId(pid);
+    @Override
+    public List<DailySymptomLog> getLogsByPatient(Long patientId) {
+
+        patientRepository.findById(patientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
+
+        return logRepository.findByPatientId(patientId);
     }
 }

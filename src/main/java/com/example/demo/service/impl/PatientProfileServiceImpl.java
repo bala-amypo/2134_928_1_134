@@ -4,13 +4,10 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.PatientProfile;
 import com.example.demo.repository.PatientProfileRepository;
 import com.example.demo.service.PatientProfileService;
-import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Service
 public class PatientProfileServiceImpl implements PatientProfileService {
 
     private final PatientProfileRepository repository;
@@ -21,29 +18,13 @@ public class PatientProfileServiceImpl implements PatientProfileService {
 
     @Override
     public PatientProfile createPatient(PatientProfile profile) {
-
-        // 🔥 CRITICAL FIXES
-        if (profile.getCreatedAt() == null) {
-            profile.setCreatedAt(LocalDateTime.now());
-        }
-
-        if (profile.getActive() == null) {
-            profile.setActive(true);
-        }
-
         return repository.save(profile);
     }
 
     @Override
     public PatientProfile getPatientById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Patient not found with id: " + id));
-    }
-
-    @Override
-    public List<PatientProfile> getAllPatients() {
-        return repository.findAll();
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
     }
 
     @Override
@@ -56,5 +37,10 @@ public class PatientProfileServiceImpl implements PatientProfileService {
     @Override
     public Optional<PatientProfile> findByPatientId(String patientId) {
         return repository.findByPatientId(patientId);
+    }
+
+    @Override
+    public List<PatientProfile> getAllPatients() {
+        return repository.findAll();
     }
 }
