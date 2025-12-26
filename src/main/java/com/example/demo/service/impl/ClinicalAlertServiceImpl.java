@@ -4,10 +4,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.ClinicalAlertRecord;
 import com.example.demo.repository.ClinicalAlertRecordRepository;
 import com.example.demo.service.ClinicalAlertService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
+@Service
 public class ClinicalAlertServiceImpl implements ClinicalAlertService {
 
     private final ClinicalAlertRecordRepository repository;
