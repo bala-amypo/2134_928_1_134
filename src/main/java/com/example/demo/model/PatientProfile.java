@@ -11,6 +11,7 @@ public class PatientProfile {
     private Long id;
 
     private String patientId;
+    private String fullName;          // ✅ REQUIRED
     private String email;
     private String surgeryType;
     private Boolean active = true;
@@ -33,6 +34,11 @@ public class PatientProfile {
 
         public Builder patientId(String patientId) {
             p.setPatientId(patientId);
+            return this;
+        }
+
+        public Builder fullName(String fullName) {
+            p.setFullName(fullName);
             return this;
         }
 
@@ -64,6 +70,7 @@ public class PatientProfile {
     // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
     public String getPatientId() { return patientId; }
+    public String getFullName() { return fullName; }
     public String getEmail() { return email; }
     public String getSurgeryType() { return surgeryType; }
     public Boolean getActive() { return active; }
@@ -71,6 +78,7 @@ public class PatientProfile {
 
     public void setId(Long id) { this.id = id; }
     public void setPatientId(String patientId) { this.patientId = patientId; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
     public void setEmail(String email) { this.email = email; }
     public void setSurgeryType(String surgeryType) { this.surgeryType = surgeryType; }
     public void setActive(Boolean active) { this.active = active; }
