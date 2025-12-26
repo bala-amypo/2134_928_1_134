@@ -10,7 +10,9 @@ public class DailySymptomLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String patientId;
+    // 🔥 MUST BE Long (not String)
+    private Long patientId;
+
     private Integer painLevel;
     private Integer mobilityLevel;
     private Integer fatigueLevel;
@@ -26,7 +28,7 @@ public class DailySymptomLog {
     public static class Builder {
         private final DailySymptomLog d = new DailySymptomLog();
 
-        public Builder patientId(String p) {
+        public Builder patientId(Long p) {
             d.setPatientId(p);
             return this;
         }
@@ -58,14 +60,14 @@ public class DailySymptomLog {
 
     // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
-    public String getPatientId() { return patientId; }
+    public Long getPatientId() { return patientId; }
     public Integer getPainLevel() { return painLevel; }
     public Integer getMobilityLevel() { return mobilityLevel; }
     public Integer getFatigueLevel() { return fatigueLevel; }
     public LocalDate getLogDate() { return logDate; }
 
     public void setId(Long id) { this.id = id; }
-    public void setPatientId(String patientId) { this.patientId = patientId; }
+    public void setPatientId(Long patientId) { this.patientId = patientId; }
     public void setPainLevel(Integer painLevel) { this.painLevel = painLevel; }
     public void setMobilityLevel(Integer mobilityLevel) { this.mobilityLevel = mobilityLevel; }
     public void setFatigueLevel(Integer fatigueLevel) { this.fatigueLevel = fatigueLevel; }
