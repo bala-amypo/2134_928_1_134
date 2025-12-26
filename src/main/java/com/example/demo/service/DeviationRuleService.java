@@ -6,14 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviationRuleService {
-
     DeviationRule createRule(DeviationRule rule);
-
     DeviationRule updateRule(Long id, DeviationRule rule);
-
     List<DeviationRule> getAllRules();
-
     List<DeviationRule> getActiveRules();
-
     Optional<DeviationRule> getRuleByCode(String ruleCode);
 }

@@ -27,7 +27,6 @@ public class ClinicalAlertServiceImpl implements ClinicalAlertService {
     public ClinicalAlertRecord resolveAlert(Long alertId) {
         ClinicalAlertRecord record = repository.findById(alertId)
                 .orElseThrow(() -> new ResourceNotFoundException("Alert not found"));
-
         record.setResolved(true);
         return repository.save(record);
     }

@@ -29,15 +29,13 @@ public class DeviationRuleServiceImpl implements DeviationRuleService {
     @Override
     public DeviationRule updateRule(Long id, DeviationRule rule) {
         DeviationRule existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-
-        existing.setRuleCode(rule.getRuleCode());
+                .orElseThrow(() -> new ResourceNotFoundException("Deviation rule not found"));
         existing.setParameter(rule.getParameter());
+        existing.setRuleCode(rule.getRuleCode());
         existing.setThreshold(rule.getThreshold());
         existing.setSeverity(rule.getSeverity());
         existing.setActive(rule.getActive());
         existing.setSurgeryType(rule.getSurgeryType());
-
         return repository.save(existing);
     }
 
