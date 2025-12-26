@@ -11,10 +11,12 @@ public class ClinicalAlertRecord {
     private Long id;
 
     private String message;
+    private Boolean resolved = false;
     private LocalDateTime triggeredAt;
 
     public ClinicalAlertRecord() {}
 
+    // ===== BUILDER =====
     public static Builder builder() {
         return new Builder();
     }
@@ -24,6 +26,11 @@ public class ClinicalAlertRecord {
 
         public Builder message(String m) {
             c.setMessage(m);
+            return this;
+        }
+
+        public Builder resolved(Boolean r) {
+            c.setResolved(r);
             return this;
         }
 
@@ -37,11 +44,14 @@ public class ClinicalAlertRecord {
         }
     }
 
+    // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
     public String getMessage() { return message; }
+    public Boolean getResolved() { return resolved; }
     public LocalDateTime getTriggeredAt() { return triggeredAt; }
 
     public void setId(Long id) { this.id = id; }
     public void setMessage(String message) { this.message = message; }
+    public void setResolved(Boolean resolved) { this.resolved = resolved; }
     public void setTriggeredAt(LocalDateTime triggeredAt) { this.triggeredAt = triggeredAt; }
 }

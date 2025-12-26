@@ -9,11 +9,14 @@ public class DeviationRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String metric;
-    private Integer threshold;
+    private String ruleCode;
+    private String parameter;
+    private String severity;
+    private Boolean active = true;
 
     public DeviationRule() {}
 
+    // ===== BUILDER =====
     public static Builder builder() {
         return new Builder();
     }
@@ -21,13 +24,23 @@ public class DeviationRule {
     public static class Builder {
         private final DeviationRule d = new DeviationRule();
 
-        public Builder metric(String m) {
-            d.setMetric(m);
+        public Builder ruleCode(String r) {
+            d.setRuleCode(r);
             return this;
         }
 
-        public Builder threshold(Integer t) {
-            d.setThreshold(t);
+        public Builder parameter(String p) {
+            d.setParameter(p);
+            return this;
+        }
+
+        public Builder severity(String s) {
+            d.setSeverity(s);
+            return this;
+        }
+
+        public Builder active(Boolean a) {
+            d.setActive(a);
             return this;
         }
 
@@ -36,11 +49,16 @@ public class DeviationRule {
         }
     }
 
+    // ===== GETTERS / SETTERS =====
     public Long getId() { return id; }
-    public String getMetric() { return metric; }
-    public Integer getThreshold() { return threshold; }
+    public String getRuleCode() { return ruleCode; }
+    public String getParameter() { return parameter; }
+    public String getSeverity() { return severity; }
+    public Boolean getActive() { return active; }
 
     public void setId(Long id) { this.id = id; }
-    public void setMetric(String metric) { this.metric = metric; }
-    public void setThreshold(Integer threshold) { this.threshold = threshold; }
+    public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+    public void setParameter(String parameter) { this.parameter = parameter; }
+    public void setSeverity(String severity) { this.severity = severity; }
+    public void setActive(Boolean active) { this.active = active; }
 }
