@@ -9,9 +9,11 @@ public interface DeviationRuleService {
 
     DeviationRule createRule(DeviationRule rule);
 
-    Optional<DeviationRule> getRuleByCode(String ruleCode);
+    DeviationRule updateRule(Long id, DeviationRule rule);
+
+    List<DeviationRule> getAllRules();
 
     List<DeviationRule> getActiveRules();
 
-    DeviationRule updateRule(Long id, DeviationRule rule);
+    Optional<DeviationRule> getRuleByCode(String ruleCode);
 }

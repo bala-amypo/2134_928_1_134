@@ -3,10 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.model.RecoveryCurveProfile;
 import com.example.demo.repository.RecoveryCurveProfileRepository;
 import com.example.demo.service.RecoveryCurveService;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 
+@Service
 public class RecoveryCurveServiceImpl implements RecoveryCurveService {
 
     private final RecoveryCurveProfileRepository repository;
@@ -16,35 +17,17 @@ public class RecoveryCurveServiceImpl implements RecoveryCurveService {
     }
 
     @Override
-    public RecoveryCurveProfile createCurveEntry(RecoveryCurveProfile profile) {
-
-        if (profile == null) {
-            throw new IllegalArgumentException("Invalid recovery curve profile");
-        }
-
-        return repository.save(profile);
+    public RecoveryCurveProfile createCurveEntry(RecoveryCurveProfile curve) {
+        return repository.save(curve);
     }
 
     @Override
     public List<RecoveryCurveProfile> getCurveForSurgery(String surgeryType) {
-
-        if (surgeryType == null) {
-            return Collections.emptyList();
-        }
-
-        List<RecoveryCurveProfile> curves =
-                repository.findBySurgeryTypeOrderByDayNumberAsc(surgeryType);
-
-        // Mockito-safe: never return null
-        return curves != null ? curves : Collections.emptyList();
+        return repository.findBySurgeryTypeOrderByDayNumberAsc(surgeryType);
     }
 
     @Override
     public List<RecoveryCurveProfile> getAllCurves() {
-
-        List<RecoveryCurveProfile> curves = repository.findAll();
-
-        // Mockito-safe
-        return curves != null ? curves : Collections.emptyList();
+        return repository.findAll();
     }
 }

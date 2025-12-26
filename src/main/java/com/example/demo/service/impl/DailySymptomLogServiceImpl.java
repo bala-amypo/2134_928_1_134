@@ -2,101 +2,58 @@ package com.example.demo.service.impl;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.DailySymptomLog;
-import com.example.demo.model.PatientProfile;
 import com.example.demo.repository.DailySymptomLogRepository;
 import com.example.demo.repository.PatientProfileRepository;
-import com.example.demo.service.*;
+import com.example.demo.service.DailySymptomLogService;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
+@Service
 public class DailySymptomLogServiceImpl implements DailySymptomLogService {
 
     private final DailySymptomLogRepository logRepository;
     private final PatientProfileRepository patientRepository;
-    private final RecoveryCurveService recoveryCurveService;
-    private final DeviationRuleService deviationRuleService;
-    private final ClinicalAlertService clinicalAlertService;
 
-    public DailySymptomLogServiceImpl(
-            DailySymptomLogRepository logRepository,
-            PatientProfileRepository patientRepository,
-            RecoveryCurveService recoveryCurveService,
-            DeviationRuleService deviationRuleService,
-            ClinicalAlertService clinicalAlertService) {
-
+    public DailySymptomLogServiceImpl(DailySymptomLogRepository logRepository,
+                                      PatientProfileRepository patientRepository) {
         this.logRepository = logRepository;
         this.patientRepository = patientRepository;
-        this.recoveryCurveService = recoveryCurveService;
-        this.deviationRuleService = deviationRuleService;
-        this.clinicalAlertService = clinicalAlertService;
     }
 
     @Override
     public DailySymptomLog recordSymptomLog(DailySymptomLog log) {
-
-        if (log == null || log.getPatientId() == null) {
-            throw new IllegalArgumentException("Invalid symptom log");
-        }
-
-        PatientProfile patient = patientRepository.findById(log.getPatientId())
+        patientRepository.findById(log.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
 
-        Optional<DailySymptomLog> existing =
-                logRepository.findByPatientIdAndLogDate(
-                        log.getPatientId(),
-                        log.getLogDate()
-                );
-
-        if (existing.isPresent()) {
-            throw new ResourceNotFoundException("Daily log already exists");
+        if (log.getLogDate() != null && log.getLogDate().isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Future date not allowed");
         }
 
-        DailySymptomLog savedLog = logRepository.save(log);
+        logRepository.findByPatientIdAndLogDate(
+                log.getPatientId(),
+                log.getLogDate()
+        ).ifPresent(l -> {
+            throw new IllegalArgumentException("Duplicate daily log");
+        });
 
-        // Mockito-expected interactions
-        recoveryCurveService.evaluateRecovery(patient.getId());
-        deviationRuleService.checkDeviation(savedLog);
-        clinicalAlertService.evaluateAlerts(savedLog);
-
-        return savedLog;
+        return logRepository.save(log);
     }
 
     @Override
-    public DailySymptomLog updateSymptomLog(Long logId, DailySymptomLog updatedLog) {
-
-        if (updatedLog == null) {
-            throw new IllegalArgumentException("Invalid symptom log");
-        }
-
-        DailySymptomLog existing = logRepository.findById(logId)
+    public DailySymptomLog updateSymptomLog(Long id, DailySymptomLog updated) {
+        DailySymptomLog existing = logRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Log not found"));
 
-        patientRepository.findById(existing.getPatientId())
-                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
+        updated.setId(existing.getId());
+        updated.setPatientId(existing.getPatientId());
 
-        // Preserve identity (VERY IMPORTANT FOR TESTS)
-        updatedLog.setId(existing.getId());
-        updatedLog.setPatientId(existing.getPatientId());
-
-        DailySymptomLog saved = logRepository.save(updatedLog);
-
-        deviationRuleService.checkDeviation(saved);
-        clinicalAlertService.evaluateAlerts(saved);
-
-        return saved;
+        return logRepository.save(updated);
     }
 
     @Override
     public List<DailySymptomLog> getLogsByPatient(Long patientId) {
-
-        patientRepository.findById(patientId)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
-
-        List<DailySymptomLog> logs = logRepository.findByPatientId(patientId);
-
-        // Mockito safety
-        return logs != null ? logs : Collections.emptyList();
+        return logRepository.findByPatientId(patientId);
     }
 }

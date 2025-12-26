@@ -1,45 +1,79 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.*;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.model.AppUser;
+import com.example.demo.repository.AppUserRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthServiceImpl implements AuthService {
 
-    private final AppUserRepository repo;
-    private final PasswordEncoder encoder;
-    private final AuthenticationManager manager;
-    private final JwtTokenProvider jwt;
+    private final AppUserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthServiceImpl(AppUserRepository r, PasswordEncoder e,
-                           AuthenticationManager m, JwtTokenProvider j) {
-        this.repo = r; this.encoder = e; this.manager = m; this.jwt = j;
+    public AuthServiceImpl(AppUserRepository appUserRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtTokenProvider jwtTokenProvider) {
+        this.appUserRepository = appUserRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    public AuthResponse register(RegisterRequest req) {
-        AppUser user = AppUser.builder()
-                .email(req.getEmail())
-                .password(encoder.encode(req.getPassword()))
-                .fullName(req.getFullName())
-                .role(UserRole.CLINICIAN)
-                .build();
+    @Override
+    public AuthResponse register(RegisterRequest request) {
+        if (appUserRepository.existsByEmail(request.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
 
-        AppUser saved = repo.save(user);
-        return new AuthResponse(saved.getEmail(), jwt.generateToken(saved));
-    }
-
-    public AuthResponse login(AuthRequest req) {
-        manager.authenticate(
-            new UsernamePasswordAuthenticationToken(req.getEmail(), req.getPassword())
+        AppUser user = new AppUser(
+                null,
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getFullName(),
+                request.getRole()
         );
 
-        AppUser user = repo.findByEmail(req.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Invalid"));
+        AppUser saved = appUserRepository.save(user);
+        String token = jwtTokenProvider.generateToken(saved);
 
-        return new AuthResponse(user.getEmail(), jwt.generateToken(user));
+        return new AuthResponse(
+                token,
+                saved.getEmail(),
+                saved.getRole(),
+                saved.getId()
+        );
+    }
+
+    @Override
+    public AuthResponse login(AuthRequest request) {
+        AppUser user = appUserRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        String token = jwtTokenProvider.generateToken(user);
+
+        return new AuthResponse(
+                token,
+                user.getEmail(),
+                user.getRole(),
+                user.getId()
+        );
     }
 }

@@ -4,11 +4,12 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.DeviationRule;
 import com.example.demo.repository.DeviationRuleRepository;
 import com.example.demo.service.DeviationRuleService;
+import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DeviationRuleServiceImpl implements DeviationRuleService {
 
     private final DeviationRuleRepository repository;
@@ -19,50 +20,39 @@ public class DeviationRuleServiceImpl implements DeviationRuleService {
 
     @Override
     public DeviationRule createRule(DeviationRule rule) {
-
-        if (rule == null) {
-            throw new IllegalArgumentException("Invalid rule");
+        if (rule.getThreshold() == null || rule.getThreshold() <= 0) {
+            throw new IllegalArgumentException("Threshold must be positive");
         }
-
         return repository.save(rule);
     }
 
     @Override
-    public Optional<DeviationRule> getRuleByCode(String ruleCode) {
+    public DeviationRule updateRule(Long id, DeviationRule rule) {
+        DeviationRule existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
 
-        if (ruleCode == null) {
-            return Optional.empty();
-        }
+        existing.setRuleCode(rule.getRuleCode());
+        existing.setParameter(rule.getParameter());
+        existing.setThreshold(rule.getThreshold());
+        existing.setSeverity(rule.getSeverity());
+        existing.setActive(rule.getActive());
+        existing.setSurgeryType(rule.getSurgeryType());
 
-        return repository.findByRuleCode(ruleCode);
+        return repository.save(existing);
+    }
+
+    @Override
+    public List<DeviationRule> getAllRules() {
+        return repository.findAll();
     }
 
     @Override
     public List<DeviationRule> getActiveRules() {
-
-        List<DeviationRule> rules = repository.findByActiveTrue();
-
-        // Mockito-safe: never return null
-        return rules != null ? rules : Collections.emptyList();
+        return repository.findByActiveTrue();
     }
 
     @Override
-    public DeviationRule updateRule(Long id, DeviationRule updatedRule) {
-
-        if (updatedRule == null) {
-            throw new IllegalArgumentException("Invalid rule");
-        }
-
-        DeviationRule existing = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-
-        // Preserve identity
-        existing.setRuleCode(updatedRule.getRuleCode());
-        existing.setParameter(updatedRule.getParameter());
-        existing.setThreshold(updatedRule.getThreshold());
-        existing.setSeverity(updatedRule.getSeverity());
-        existing.setActive(updatedRule.getActive());
-
-        return repository.save(existing);
+    public Optional<DeviationRule> getRuleByCode(String ruleCode) {
+        return repository.findByRuleCode(ruleCode);
     }
 }
