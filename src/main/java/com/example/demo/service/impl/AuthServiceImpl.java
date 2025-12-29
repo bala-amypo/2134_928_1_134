@@ -38,17 +38,19 @@ public class AuthServiceImpl implements AuthService {
             throw new IllegalArgumentException("Email already exists");
         }
 
+        UserRole role = request.getRole() != null
+                ? request.getRole()
+                : UserRole.CLINICIAN; // default fallback
+
         AppUser user = AppUser.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
-                // ✅ VALID ENUM VALUE
-                .role(UserRole.CLINICIAN)
+                .role(role)
                 .build();
 
         AppUser savedUser = appUserRepository.save(user);
 
-        // ✅ PASS AppUser (MATCHES JwtTokenProvider)
         String token = jwtTokenProvider.generateToken(savedUser);
 
         return new AuthResponse(
@@ -72,7 +74,6 @@ public class AuthServiceImpl implements AuthService {
         AppUser user = appUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
-        // ✅ PASS AppUser
         String token = jwtTokenProvider.generateToken(user);
 
         return new AuthResponse(
