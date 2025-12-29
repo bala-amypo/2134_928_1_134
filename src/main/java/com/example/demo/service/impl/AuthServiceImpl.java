@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -41,14 +42,14 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
-                // ✅ DEFAULT ROLE (safe)
-                .role(UserRole.USER)
+                // ✅ VALID ENUM VALUE
+                .role(UserRole.CLINICIAN)
                 .build();
 
         AppUser savedUser = appUserRepository.save(user);
 
-        // ✅ JWT MUST RECEIVE STRING
-        String token = jwtTokenProvider.generateToken(savedUser.getEmail());
+        // ✅ PASS AppUser (MATCHES JwtTokenProvider)
+        String token = jwtTokenProvider.generateToken(savedUser);
 
         return new AuthResponse(
                 token,
@@ -71,8 +72,8 @@ public class AuthServiceImpl implements AuthService {
         AppUser user = appUserRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
-        // ✅ STRING ONLY
-        String token = jwtTokenProvider.generateToken(user.getEmail());
+        // ✅ PASS AppUser
+        String token = jwtTokenProvider.generateToken(user);
 
         return new AuthResponse(
                 token,
