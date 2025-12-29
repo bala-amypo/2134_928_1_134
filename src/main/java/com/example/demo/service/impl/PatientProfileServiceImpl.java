@@ -1,12 +1,10 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.PatientProfile;
 import com.example.demo.repository.PatientProfileRepository;
 import com.example.demo.service.PatientProfileService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +18,14 @@ public class PatientProfileServiceImpl implements PatientProfileService {
     }
 
     @Override
-    public PatientProfile createPatient(PatientProfile profile) {
-        patientProfileRepository.findByEmail(profile.getEmail()).ifPresent(u -> { throw new IllegalArgumentException("Email already exists"); });
-        if (profile.getCreatedAt() == null) {
-            profile.setCreatedAt(LocalDateTime.now());
-        }
-        if (profile.getActive() == null) {
-            profile.setActive(true);
-        }
-        return patientProfileRepository.save(profile);
+    public PatientProfile create(PatientProfile patient) {
+        return patientProfileRepository.save(patient);
     }
 
     @Override
     public PatientProfile getPatientById(Long id) {
         return patientProfileRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient not found"));
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + id));
     }
 
     @Override
@@ -44,9 +35,9 @@ public class PatientProfileServiceImpl implements PatientProfileService {
 
     @Override
     public PatientProfile updatePatientStatus(Long id, boolean active) {
-        PatientProfile profile = getPatientById(id);
-        profile.setActive(active);
-        return patientProfileRepository.save(profile);
+        PatientProfile patient = getPatientById(id);
+        patient.setActive(active);
+        return patientProfileRepository.save(patient);
     }
 
     @Override
